@@ -1,0 +1,44 @@
+{
+  "name": "crelink-wallet",
+  "version": "0.1.0",
+  "description": "CreLink Wallet - Catena 기반 다중 플랫폼 지원 EVM 지갑",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "clean": "lerna run clean"
+  },
+  "devDependencies": {
+    "lerna": "^5.5.2",
+    "typescript": "^5.1.6",
+    "rimraf": "^5.0.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "eslint": "^8.43.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "prettier": "^2.8.8"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "keywords": [
+    "wallet",
+    "blockchain",
+    "ethereum",
+    "catena",
+    "did",
+    "web3"
+  ],
+  "author": "CreLink Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creatachain/crelink-wallet.git"
+  }
+}
