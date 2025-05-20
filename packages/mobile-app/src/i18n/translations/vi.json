@@ -1,0 +1,84 @@
+{
+  "common": {
+    "appName": "Ví CreLink",
+    "ok": "OK",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "close": "Đóng",
+    "done": "Hoàn thành",
+    "loading": "Đang tải...",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "warning": "Cảnh báo",
+    "copied": "Đã sao chép vào bộ nhớ tạm",
+    "unknown": "Không xác định"
+  },
+  "auth": {
+    "createWallet": "Tạo ví",
+    "importWallet": "Nhập ví",
+    "importFromMnemonic": "Nhập từ cụm từ khôi phục",
+    "importFromPrivateKey": "Nhập từ khóa riêng",
+    "logout": "Đăng xuất"
+  },
+  "wallet": {
+    "yourWallet": "Ví của bạn",
+    "account": "Tài khoản",
+    "accounts": "Tài khoản",
+    "assets": "Tài sản",
+    "activity": "Hoạt động",
+    "total": "Tổng số dư",
+    "receive": "Nhận",
+    "send": "Gửi",
+    "swap": "Hoán đổi",
+    "buy": "Mua",
+    "tokens": "Token",
+    "nfts": "NFT"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "general": "Chung",
+    "security": "Bảo mật",
+    "networks": "Mạng",
+    "appearance": "Giao diện",
+    "language": "Ngôn ngữ",
+    "currency": "Tiền tệ",
+    "about": "Giới thiệu",
+    "support": "Hỗ trợ",
+    "privacyPolicy": "Chính sách bảo mật",
+    "termsOfService": "Điều khoản dịch vụ",
+    "version": "Phiên bản",
+    "theme": {
+      "title": "Chủ đề",
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Hệ thống"
+    },
+    "languages": {
+      "en": "English",
+      "ko": "한국어",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    }
+  },
+  "did": {
+    "title": "Nhận dạng phi tập trung",
+    "yourDid": "DID của bạn",
+    "createDid": "Tạo DID mới",
+    "linkedAccounts": "Tài khoản đã liên kết",
+    "connectAccount": "Kết nối tài khoản",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động",
+      "pending": "Đang chờ xử lý"
+    },
+    "whatIsDid": "DID là gì?",
+    "didDescription": "Nhận dạng phi tập trung (DID) cho phép bạn chứng minh danh tính của mình mà không phụ thuộc vào các cơ quan tập trung. CreLink sử dụng công nghệ zkDID để bảo vệ quyền riêng tư của bạn trong khi cho phép xác minh danh tính."
+  }
+}

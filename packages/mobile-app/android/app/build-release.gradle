@@ -1,0 +1,54 @@
+/**
+ * CreLink Android 앱 배포를 위한 빌드 설정
+ */
+
+// 키스토어 설정
+android {
+    signingConfigs {
+        release {
+            if (project.hasProperty('CRELINK_UPLOAD_STORE_FILE')) {
+                storeFile file(CRELINK_UPLOAD_STORE_FILE)
+                storePassword CRELINK_UPLOAD_STORE_PASSWORD
+                keyAlias CRELINK_UPLOAD_KEY_ALIAS
+                keyPassword CRELINK_UPLOAD_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes {
+        release {
+            // 난독화 및 최적화 활성화
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // 빌드 번호 자동 증가
+            versionNameSuffix = "-" + getVersionNameSuffix()
+            
+            if (project.hasProperty('CRELINK_UPLOAD_STORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+// 버전 관리 함수
+def getVersionNameSuffix() {
+    return System.getenv("BUILD_NUMBER") ?: "local"
+}
+
+// Play 스토어 배포 설정
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+    // Firebase 크래시 리포팅
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    
+    // 인앱 업데이트
+    implementation 'com.google.android.play:core:1.10.3'
+}
+
+// Play 스토어 배포 설정
+apply plugin: 'com.google.firebase.crashlytics'

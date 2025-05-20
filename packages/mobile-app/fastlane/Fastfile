@@ -1,0 +1,141 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+# https://docs.fastlane.tools/actions
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to App Store"
+  lane :deploy do
+    # 인증서 및 프로비저닝 프로파일 설정
+    setup_ci if ENV['CI']
+    
+    # 환경 변수에서 인증서 & 프로비저닝 프로파일 가져오기
+    if ENV['CI']
+      app_store_connect_api_key(
+        key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+        key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT']
+      )
+    else
+      # 로컬 환경에서는 Keychain에서 인증서 사용
+      # 로컬 환경에서는 개발자가 수동으로 설정
+    end
+    
+    # IPA 파일 업로드
+    upload_to_app_store(
+      app_identifier: "com.creatachain.crelink.wallet",
+      ipa: "build/Export/CreLinkWallet.ipa",
+      skip_screenshots: true,
+      skip_metadata: false,
+      force: true, # App Store Connect 검증 건너뛰기
+      precheck_include_in_app_purchases: false,
+      submit_for_review: false # 자동 제출 비활성화 (수동으로 검토 후 제출)
+    )
+  end
+  
+  desc "Build and distribute to TestFlight"
+  lane :beta do
+    # TestFlight 배포 설정
+    setup_ci if ENV['CI']
+    
+    # 환경 변수에서 인증서 & 프로비저닝 프로파일 가져오기
+    if ENV['CI']
+      app_store_connect_api_key(
+        key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+        key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT']
+      )
+    else
+      # 로컬 환경에서는 Keychain에서 인증서 사용
+    end
+    
+    # TestFlight 업로드
+    upload_to_testflight(
+      app_identifier: "com.creatachain.crelink.wallet",
+      ipa: "build/Export/CreLinkWallet.ipa",
+      skip_waiting_for_build_processing: true,
+      distribute_external: false,
+      changelog: "CreLink 지갑 테스트 빌드 - 최신 기능 테스트를 위한 빌드입니다."
+    )
+  end
+end
+
+platform :android do
+  desc "Build and upload to Google Play"
+  lane :deploy do
+    # Google Play 인증 설정
+    if ENV['CI']
+      # CI 환경에서는 서비스 계정 키 파일을 환경 변수에서 생성
+      File.write("google-play-key.json", ENV['PLAY_STORE_JSON_KEY'])
+      
+      # Google Play 콘솔에 앱 번들 파일 업로드
+      upload_to_play_store(
+        package_name: "com.creatachain.crelink.wallet",
+        json_key: "google-play-key.json",
+        aab: "../android/app/build/outputs/bundle/release/app-release.aab",
+        track: "production",
+        release_status: "completed",
+        skip_upload_metadata: false,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
+      )
+      
+      # 임시 키 파일 삭제
+      File.delete("google-play-key.json") if File.exist?("google-play-key.json")
+    else
+      # 로컬 환경에서는 개발자가 수동으로 설정
+      upload_to_play_store(
+        package_name: "com.creatachain.crelink.wallet",
+        json_key: "path/to/your/google-play-key.json",
+        aab: "../android/app/build/outputs/bundle/release/app-release.aab",
+        track: "production",
+        release_status: "completed",
+        skip_upload_metadata: false,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
+      )
+    end
+  end
+  
+  desc "Build and upload to Google Play Beta"
+  lane :beta do
+    # Google Play 베타 배포 설정
+    if ENV['CI']
+      # CI 환경에서는 서비스 계정 키 파일을 환경 변수에서 생성
+      File.write("google-play-key.json", ENV['PLAY_STORE_JSON_KEY'])
+      
+      # Google Play 콘솔에 앱 번들 파일 업로드 (베타 트랙)
+      upload_to_play_store(
+        package_name: "com.creatachain.crelink.wallet",
+        json_key: "google-play-key.json",
+        aab: "../android/app/build/outputs/bundle/release/app-release.aab",
+        track: "beta",
+        release_status: "completed",
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
+      )
+      
+      # 임시 키 파일 삭제
+      File.delete("google-play-key.json") if File.exist?("google-play-key.json")
+    else
+      # 로컬 환경에서는 개발자가 수동으로 설정
+      upload_to_play_store(
+        package_name: "com.creatachain.crelink.wallet",
+        json_key: "path/to/your/google-play-key.json",
+        aab: "../android/app/build/outputs/bundle/release/app-release.aab",
+        track: "beta",
+        release_status: "completed",
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
+      )
+    end
+  end
+end

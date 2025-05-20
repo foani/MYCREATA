@@ -1,0 +1,213 @@
+{
+  "common": {
+    "appName": "CreLink Wallet",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "done": "Done",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "copied": "Copied to clipboard",
+    "unknown": "Unknown"
+  },
+  "auth": {
+    "createWallet": "Create Wallet",
+    "importWallet": "Import Wallet",
+    "importFromMnemonic": "Import from Secret Recovery Phrase",
+    "importFromPrivateKey": "Import from Private Key",
+    "logout": "Logout",
+    "pin": {
+      "create": "Create PIN",
+      "confirm": "Confirm PIN",
+      "enter": "Enter PIN",
+      "change": "Change PIN",
+      "current": "Current PIN",
+      "new": "New PIN",
+      "confirmNew": "Confirm New PIN",
+      "pinMismatch": "PINs do not match",
+      "incorrectPin": "Incorrect PIN",
+      "pinLengthError": "PIN must be 6 digits"
+    },
+    "biometrics": {
+      "enable": "Enable Biometric Authentication",
+      "disable": "Disable Biometric Authentication",
+      "faceId": "Face ID",
+      "touchId": "Touch ID",
+      "fingerprint": "Fingerprint",
+      "authenticateToEnable": "Authenticate to enable {{type}}",
+      "authenticateToLogin": "Authenticate to login"
+    },
+    "mnemonic": {
+      "title": "Secret Recovery Phrase",
+      "description": "Write down these 12 words in order and keep them safe. This phrase is the only way to recover your wallet if you lose access.",
+      "verification": "Verify Secret Recovery Phrase",
+      "verificationDesc": "Please select the words in the correct order",
+      "enterDesc": "Enter your Secret Recovery Phrase, separated by spaces",
+      "invalidMnemonic": "Invalid Secret Recovery Phrase"
+    },
+    "privateKey": {
+      "title": "Private Key",
+      "description": "Enter your private key",
+      "warning": "Warning: Anyone with your private key has full access to your wallet",
+      "invalidPrivateKey": "Invalid private key"
+    }
+  },
+  "wallet": {
+    "yourWallet": "Your Wallet",
+    "account": "Account",
+    "accounts": "Accounts",
+    "assets": "Assets",
+    "activity": "Activity",
+    "total": "Total Balance",
+    "receive": "Receive",
+    "send": "Send",
+    "swap": "Swap",
+    "buy": "Buy",
+    "tokens": "Tokens",
+    "nfts": "NFTs",
+    "transactions": {
+      "title": "Transactions",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "failed": "Failed",
+      "sent": "Sent",
+      "received": "Received",
+      "fee": "Fee",
+      "details": "Transaction Details",
+      "hash": "Transaction Hash",
+      "from": "From",
+      "to": "To",
+      "amount": "Amount",
+      "time": "Time",
+      "viewInExplorer": "View in Explorer",
+      "noTransactions": "No transactions found"
+    },
+    "send": {
+      "title": "Send",
+      "recipient": "Recipient Address",
+      "amount": "Amount",
+      "availableBalance": "Available Balance: {{amount}}",
+      "fee": "Network Fee",
+      "total": "Total Amount",
+      "slow": "Slow",
+      "average": "Average",
+      "fast": "Fast",
+      "custom": "Custom",
+      "gwei": "Gwei",
+      "invalidAddress": "Invalid address",
+      "insufficientFunds": "Insufficient funds",
+      "enterAmount": "Please enter amount",
+      "enterRecipient": "Please enter recipient address",
+      "transactionSent": "Transaction sent successfully",
+      "sendingTransaction": "Sending transaction...",
+      "reviewTransaction": "Review Transaction"
+    },
+    "receive": {
+      "title": "Receive",
+      "yourAddress": "Your Address",
+      "shareAddress": "Share Address",
+      "copyAddress": "Copy Address"
+    },
+    "token": {
+      "addToken": "Add Token",
+      "customToken": "Custom Token",
+      "tokenAddress": "Token Contract Address",
+      "tokenSymbol": "Token Symbol",
+      "tokenDecimals": "Token Decimals",
+      "tokenName": "Token Name",
+      "invalidTokenAddress": "Invalid token address",
+      "tokenAlreadyAdded": "Token already added",
+      "tokenAddedSuccess": "Token added successfully",
+      "removeToken": "Remove Token",
+      "removeTokenConfirm": "Are you sure you want to remove {{symbol}}?"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "security": "Security",
+    "networks": "Networks",
+    "appearance": "Appearance",
+    "language": "Language",
+    "currency": "Currency",
+    "about": "About",
+    "support": "Support",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "version": "Version",
+    "theme": {
+      "title": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "languages": {
+      "en": "English",
+      "ko": "한국어",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    },
+    "backup": {
+      "title": "Backup Wallet",
+      "exportPrivateKey": "Export Private Key",
+      "exportMnemonic": "Export Recovery Phrase",
+      "exportWarning": "Warning: Never share your private key or recovery phrase with anyone",
+      "authenticateToExport": "Please authenticate to export"
+    },
+    "networks": {
+      "title": "Networks",
+      "addNetwork": "Add Network",
+      "editNetwork": "Edit Network",
+      "networkName": "Network Name",
+      "rpcUrl": "RPC URL",
+      "chainId": "Chain ID",
+      "currencySymbol": "Currency Symbol",
+      "blockExplorerUrl": "Block Explorer URL (Optional)",
+      "invalidRpcUrl": "Invalid RPC URL",
+      "invalidChainId": "Invalid Chain ID",
+      "requiredField": "This field is required",
+      "networkAlreadyExists": "Network with this Chain ID already exists",
+      "networkAddedSuccess": "Network added successfully",
+      "networkUpdatedSuccess": "Network updated successfully",
+      "networkRemovedSuccess": "Network removed successfully",
+      "removeNetworkConfirm": "Are you sure you want to remove {{name}}?"
+    }
+  },
+  "did": {
+    "title": "Decentralized Identity",
+    "yourDid": "Your DIDs",
+    "createDid": "Create New DID",
+    "linkedAccounts": "Linked Accounts",
+    "connectAccount": "Connect Account",
+    "didCreated": "DID created successfully",
+    "didRevoked": "DID revoked successfully",
+    "accountConnected": "Account connected successfully",
+    "accountDisconnected": "Account disconnected successfully",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending"
+    },
+    "provider": "Provider",
+    "createdAt": "Created At",
+    "lastUsed": "Last Used",
+    "accountType": {
+      "telegram": "Telegram",
+      "google": "Google",
+      "email": "Email"
+    },
+    "connectTo": "Connect to {{type}}",
+    "whatIsDid": "What is DID?",
+    "didDescription": "Decentralized Identity (DID) allows you to prove your identity without relying on centralized authorities. CreLink uses zkDID technology to protect your privacy while enabling identity verification."
+  }
+}

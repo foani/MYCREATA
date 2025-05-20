@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zkdid-config
+  namespace: crelink
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  CORS_ALLOWED_ORIGINS: "https://crelink.io,https://app.crelink.io"
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  LOG_LEVEL: "info"
+  LOG_FORMAT: "json"
+  SWAGGER_TITLE: "CreLink zkDID API"
+  SWAGGER_VERSION: "1.0.0"
+  SWAGGER_DESCRIPTION: "CreLink zkDID API Documentation"
+  SWAGGER_HOST: "api.crelink.com"
+  SWAGGER_BASE_PATH: "/api"
+  SWAGGER_SCHEMES: "https"
+  SWAGGER_CONSUMES: "application/json"
+  SWAGGER_PRODUCES: "application/json"
+  SWAGGER_TAGS: |
+    - name: auth
+      description: Authentication operations
+    - name: did
+      description: DID operations
+    - name: activity
+      description: Activity operations 

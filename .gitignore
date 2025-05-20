@@ -1,0 +1,149 @@
+# Dependency directories
+node_modules/
+.pnp/
+.pnp.js
+
+# Build directories
+build/
+dist/
+out/
+release/
+*.bundle.js
+*.bundle.js.map
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.test
+.env.production
+env.js
+
+# Debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+.DS_Store
+
+# IDE and editor directories
+/.idea
+/.vscode
+/.fleet
+/.sublime-project
+/.sublime-workspace
+/.project
+/.classpath
+/.c9/
+/.settings/
+*.swp
+*.swo
+.prettierrc
+
+# Testing directories
+/coverage
+.nyc_output
+jest-stare
+
+# React Native
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+ios/Pods/
+ios/build/
+ios/Podfile.lock
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/release/
+android/keystore.properties
+android/app/google-services.json
+ios/Fastlane/report.xml
+android/Fastlane/report.xml
+
+# Deploy keys and certificates
+*.keystore
+*.jks
+google-play-key.json
+google-service-account.json
+app-store-api-key.p8
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+AuthKey_*.p8
+private_key.json
+service-account.json
+google-cloud-key.json
+firebase-service-account.json
+
+# Browser extension
+/packages/browser-extension/dev/
+/packages/browser-extension/dist/
+/packages/browser-extension/release/
+/packages/browser-extension/*.zip
+/packages/browser-extension/.cache
+/packages/browser-extension/node_modules
+
+# Core library
+/packages/core/dist/
+/packages/core/node_modules
+/packages/core/coverage
+
+# Mobile app
+/packages/mobile-app/node_modules
+/packages/mobile-app/ios/build
+/packages/mobile-app/ios/Pods
+/packages/mobile-app/android/build
+/packages/mobile-app/android/app/build
+/packages/mobile-app/android/app/release
+/packages/mobile-app/android/app/*.keystore
+/packages/mobile-app/android/app/*.jks
+/packages/mobile-app/android/keystore.properties
+
+# Telegram MiniApp
+/packages/telegram-miniapp/node_modules
+/packages/telegram-miniapp/build
+/packages/telegram-miniapp/dist
+
+# SDK
+/packages/sdk/node_modules
+/packages/sdk/dist
+/packages/sdk/lib
+
+# zkDID server
+/packages/zkdid-server/node_modules
+/packages/zkdid-server/dist
+/packages/zkdid-server/coverage
+
+# Logs
+logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# CI/CD artifacts
+github-actions-runner
+google-play-key.json
+google-service-account.json
+app-store-api-key.p8
+AuthKey_*.p8
+build.keychain

@@ -1,0 +1,84 @@
+{
+  "common": {
+    "appName": "CreLinkウォレット",
+    "ok": "OK",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "remove": "削除",
+    "back": "戻る",
+    "next": "次へ",
+    "close": "閉じる",
+    "done": "完了",
+    "loading": "読み込み中...",
+    "success": "成功",
+    "error": "エラー",
+    "warning": "警告",
+    "copied": "クリップボードにコピーしました",
+    "unknown": "不明"
+  },
+  "auth": {
+    "createWallet": "ウォレットを作成",
+    "importWallet": "ウォレットをインポート",
+    "importFromMnemonic": "シークレットリカバリーフレーズからインポート",
+    "importFromPrivateKey": "秘密鍵からインポート",
+    "logout": "ログアウト"
+  },
+  "wallet": {
+    "yourWallet": "あなたのウォレット",
+    "account": "アカウント",
+    "accounts": "アカウント",
+    "assets": "資産",
+    "activity": "アクティビティ",
+    "total": "合計残高",
+    "receive": "受け取り",
+    "send": "送信",
+    "swap": "スワップ",
+    "buy": "購入",
+    "tokens": "トークン",
+    "nfts": "NFT"
+  },
+  "settings": {
+    "title": "設定",
+    "general": "一般",
+    "security": "セキュリティ",
+    "networks": "ネットワーク",
+    "appearance": "外観",
+    "language": "言語",
+    "currency": "通貨",
+    "about": "アプリについて",
+    "support": "サポート",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "version": "バージョン",
+    "theme": {
+      "title": "テーマ",
+      "light": "ライト",
+      "dark": "ダーク",
+      "system": "システム"
+    },
+    "languages": {
+      "en": "English",
+      "ko": "한국어",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    }
+  },
+  "did": {
+    "title": "分散型アイデンティティ",
+    "yourDid": "あなたのDID",
+    "createDid": "新しいDIDを作成",
+    "linkedAccounts": "リンクされたアカウント",
+    "connectAccount": "アカウントを接続",
+    "status": {
+      "active": "アクティブ",
+      "inactive": "非アクティブ",
+      "pending": "保留中"
+    },
+    "whatIsDid": "DIDとは何ですか？",
+    "didDescription": "分散型アイデンティティ（DID）は、中央集権的な機関に依存せずにあなたのアイデンティティを証明することができます。CreLinkはzkDID技術を使用して、プライバシーを保護しながらアイデンティティ検証を可能にします。"
+  }
+}

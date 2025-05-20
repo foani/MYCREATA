@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreLink SDK Example</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    .card {
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+      max-width: 800px;
+    }
+    .btn-primary {
+      background-color: #3E96FF;
+      border-color: #3E96FF;
+    }
+    .btn-outline-primary {
+      color: #3E96FF;
+      border-color: #3E96FF;
+    }
+    .btn-outline-primary:hover {
+      background-color: #3E96FF;
+      border-color: #3E96FF;
+    }
+    pre {
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    #account-badge {
+      background-color: #3E96FF;
+      color: white;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 50px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+    #chain-badge {
+      background-color: #28a745;
+      color: white;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 50px;
+    }
+    .logo {
+      height: 40px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="d-flex align-items-center mb-4">
+      <img src="https://crelink.io/logo.png" alt="CreLink Logo" class="logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHJ4PSI4IiBmaWxsPSIjM0U5NkZGIi8+PHBhdGggZD0iTTEwIDEwSDMwTTIwIDEwVjMwTTEwIDIwSDMwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=='; this.onerror=null;">
+      <h1 class="mb-0">CreLink SDK Example</h1>
+    </div>
+
+    <div class="alert alert-info" id="install-alert">
+      <strong>CreLink 지갑이 설치되어 있지 않습니다.</strong> 
+      <a href="https://crelink.io/download" target="_blank" class="alert-link">여기에서 다운로드하세요.</a>
+    </div>
+    
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">계정 연결</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button id="connect-button" class="btn btn-primary" disabled>지갑 연결</button>
+            </div>
+            <div class="mt-3" id="connection-status">
+              <div>상태: <span id="connection-text">연결되지 않음</span></div>
+              <div class="mt-2 d-none" id="account-container">
+                계정: <span id="account-badge"></span>
+              </div>
+              <div class="mt-2 d-none" id="chain-container">
+                체인: <span id="chain-badge"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">체인 관리</h5>
+          </div>
+          <div class="card-body">
+            <select id="chain-select" class="form-select mb-3" disabled>
+              <option value="" selected disabled>체인 선택</option>
+              <option value="0x3E8">Catena (CIP-20) Mainnet</option>
+              <option value="0x2328">Catena (CIP-20) Testnet</option>
+              <option value="0x89">Polygon Mainnet</option>
+              <option value="0x13881">Polygon Mumbai</option>
+              <option value="0xA4B1">Arbitrum One</option>
+            </select>
+            <div class="d-grid gap-2">
+              <button id="switch-chain-button" class="btn btn-outline-primary" disabled>체인 전환</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">트랜잭션 전송</h5>
+          </div>
+          <div class="card-body">
+            <form id="tx-form">
+              <div class="mb-3">
+                <label for="tx-to" class="form-label">수신자 주소</label>
+                <input type="text" class="form-control" id="tx-to" placeholder="0x..." required>
+              </div>
+              <div class="mb-3">
+                <label for="tx-value" class="form-label">전송 값</label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="tx-value" placeholder="0.0" step="0.0001" min="0" required>
+                  <span class="input-group-text">CTA</span>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="tx-data" class="form-label">데이터 (선택사항)</label>
+                <input type="text" class="form-control" id="tx-data" placeholder="0x...">
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-outline-primary" id="send-tx-button" disabled>전송</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">메시지 서명</h5>
+          </div>
+          <div class="card-body">
+            <form id="sign-form">
+              <div class="mb-3">
+                <label for="sign-message" class="form-label">메시지</label>
+                <textarea class="form-control" id="sign-message" rows="3" placeholder="서명할 메시지 입력" required></textarea>
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-outline-primary" id="sign-button" disabled>서명</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">결과</h5>
+      </div>
+      <div class="card-body">
+        <pre id="result-box">// 이벤트 및 결과가 여기에 표시됩니다</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- CreLink SDK 추가 -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.1/dist/ethers.umd.min.js"></script>
+  <script src="../../dist/crelink.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

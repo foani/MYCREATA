@@ -1,0 +1,213 @@
+{
+  "common": {
+    "appName": "크리링크 지갑",
+    "ok": "확인",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "add": "추가",
+    "remove": "제거",
+    "back": "뒤로",
+    "next": "다음",
+    "close": "닫기",
+    "done": "완료",
+    "loading": "로딩 중...",
+    "success": "성공",
+    "error": "오류",
+    "warning": "경고",
+    "copied": "클립보드에 복사됨",
+    "unknown": "알 수 없음"
+  },
+  "auth": {
+    "createWallet": "지갑 생성",
+    "importWallet": "지갑 가져오기",
+    "importFromMnemonic": "복구 구문으로 가져오기",
+    "importFromPrivateKey": "개인키로 가져오기",
+    "logout": "로그아웃",
+    "pin": {
+      "create": "PIN 생성",
+      "confirm": "PIN 확인",
+      "enter": "PIN 입력",
+      "change": "PIN 변경",
+      "current": "현재 PIN",
+      "new": "새 PIN",
+      "confirmNew": "새 PIN 확인",
+      "pinMismatch": "PIN이 일치하지 않습니다",
+      "incorrectPin": "잘못된 PIN",
+      "pinLengthError": "PIN은 6자리여야 합니다"
+    },
+    "biometrics": {
+      "enable": "생체 인증 활성화",
+      "disable": "생체 인증 비활성화",
+      "faceId": "Face ID",
+      "touchId": "Touch ID",
+      "fingerprint": "지문",
+      "authenticateToEnable": "{{type}} 활성화를 위해 인증하세요",
+      "authenticateToLogin": "로그인하려면 인증하세요"
+    },
+    "mnemonic": {
+      "title": "비밀 복구 구문",
+      "description": "아래 12개 단어를 순서대로 적어 안전하게 보관하세요. 이 구문은 지갑 접근 권한을 잃어버렸을 때 복구할 수 있는 유일한 방법입니다.",
+      "verification": "비밀 복구 구문 확인",
+      "verificationDesc": "올바른 순서로 단어를 선택해 주세요",
+      "enterDesc": "비밀 복구 구문을 공백으로 구분하여 입력하세요",
+      "invalidMnemonic": "유효하지 않은 복구 구문"
+    },
+    "privateKey": {
+      "title": "개인키",
+      "description": "개인키를 입력하세요",
+      "warning": "경고: 개인키를 가진 사람은 귀하의 지갑에 완전한 접근 권한을 갖게 됩니다",
+      "invalidPrivateKey": "유효하지 않은 개인키"
+    }
+  },
+  "wallet": {
+    "yourWallet": "내 지갑",
+    "account": "계정",
+    "accounts": "계정",
+    "assets": "자산",
+    "activity": "활동",
+    "total": "총 잔액",
+    "receive": "받기",
+    "send": "보내기",
+    "swap": "교환",
+    "buy": "구매",
+    "tokens": "토큰",
+    "nfts": "NFT",
+    "transactions": {
+      "title": "트랜잭션",
+      "pending": "대기 중",
+      "confirmed": "완료",
+      "failed": "실패",
+      "sent": "송금됨",
+      "received": "수신됨",
+      "fee": "수수료",
+      "details": "트랜잭션 상세",
+      "hash": "트랜잭션 해시",
+      "from": "보낸 주소",
+      "to": "받는 주소",
+      "amount": "금액",
+      "time": "시간",
+      "viewInExplorer": "탐색기에서 보기",
+      "noTransactions": "트랜잭션이 없습니다"
+    },
+    "send": {
+      "title": "보내기",
+      "recipient": "받는 주소",
+      "amount": "금액",
+      "availableBalance": "사용 가능 잔액: {{amount}}",
+      "fee": "네트워크 수수료",
+      "total": "총 금액",
+      "slow": "느림",
+      "average": "보통",
+      "fast": "빠름",
+      "custom": "사용자 지정",
+      "gwei": "Gwei",
+      "invalidAddress": "유효하지 않은 주소",
+      "insufficientFunds": "잔액 부족",
+      "enterAmount": "금액을 입력하세요",
+      "enterRecipient": "받는 주소를 입력하세요",
+      "transactionSent": "트랜잭션이 성공적으로 전송되었습니다",
+      "sendingTransaction": "트랜잭션 전송 중...",
+      "reviewTransaction": "트랜잭션 검토"
+    },
+    "receive": {
+      "title": "받기",
+      "yourAddress": "내 주소",
+      "shareAddress": "주소 공유",
+      "copyAddress": "주소 복사"
+    },
+    "token": {
+      "addToken": "토큰 추가",
+      "customToken": "사용자 정의 토큰",
+      "tokenAddress": "토큰 컨트랙트 주소",
+      "tokenSymbol": "토큰 기호",
+      "tokenDecimals": "토큰 소수점",
+      "tokenName": "토큰 이름",
+      "invalidTokenAddress": "유효하지 않은 토큰 주소",
+      "tokenAlreadyAdded": "이미 추가된 토큰",
+      "tokenAddedSuccess": "토큰이 성공적으로 추가되었습니다",
+      "removeToken": "토큰 제거",
+      "removeTokenConfirm": "{{symbol}}을(를) 제거하시겠습니까?"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "general": "일반",
+    "security": "보안",
+    "networks": "네트워크",
+    "appearance": "외관",
+    "language": "언어",
+    "currency": "통화",
+    "about": "정보",
+    "support": "지원",
+    "privacyPolicy": "개인정보 처리방침",
+    "termsOfService": "서비스 이용약관",
+    "version": "버전",
+    "theme": {
+      "title": "테마",
+      "light": "라이트",
+      "dark": "다크",
+      "system": "시스템"
+    },
+    "languages": {
+      "en": "English",
+      "ko": "한국어",
+      "ja": "日本語",
+      "vi": "Tiếng Việt"
+    },
+    "backup": {
+      "title": "지갑 백업",
+      "exportPrivateKey": "개인키 내보내기",
+      "exportMnemonic": "복구 구문 내보내기",
+      "exportWarning": "경고: 개인키나 복구 구문을 절대 타인과 공유하지 마세요",
+      "authenticateToExport": "내보내기 위해 인증하세요"
+    },
+    "networks": {
+      "title": "네트워크",
+      "addNetwork": "네트워크 추가",
+      "editNetwork": "네트워크 편집",
+      "networkName": "네트워크 이름",
+      "rpcUrl": "RPC URL",
+      "chainId": "체인 ID",
+      "currencySymbol": "통화 기호",
+      "blockExplorerUrl": "블록 탐색기 URL (선택 사항)",
+      "invalidRpcUrl": "유효하지 않은 RPC URL",
+      "invalidChainId": "유효하지 않은 체인 ID",
+      "requiredField": "필수 필드입니다",
+      "networkAlreadyExists": "이미 이 체인 ID를 가진 네트워크가 존재합니다",
+      "networkAddedSuccess": "네트워크가 성공적으로 추가되었습니다",
+      "networkUpdatedSuccess": "네트워크가 성공적으로 업데이트되었습니다",
+      "networkRemovedSuccess": "네트워크가 성공적으로 제거되었습니다",
+      "removeNetworkConfirm": "{{name}}을(를) 제거하시겠습니까?"
+    }
+  },
+  "did": {
+    "title": "탈중앙 신원",
+    "yourDid": "내 DID",
+    "createDid": "새 DID 생성",
+    "linkedAccounts": "연결된 계정",
+    "connectAccount": "계정 연결",
+    "didCreated": "DID가 성공적으로 생성되었습니다",
+    "didRevoked": "DID가 성공적으로 취소되었습니다",
+    "accountConnected": "계정이 성공적으로 연결되었습니다",
+    "accountDisconnected": "계정 연결이 해제되었습니다",
+    "status": {
+      "active": "활성",
+      "inactive": "비활성",
+      "pending": "대기 중"
+    },
+    "provider": "제공자",
+    "createdAt": "생성일",
+    "lastUsed": "마지막 사용",
+    "accountType": {
+      "telegram": "텔레그램",
+      "google": "구글",
+      "email": "이메일"
+    },
+    "connectTo": "{{type}}에 연결",
+    "whatIsDid": "DID란 무엇인가요?",
+    "didDescription": "탈중앙 신원(DID)은 중앙화된 기관 없이 자신의 신원을 증명할 수 있게 해줍니다. 크리링크는 zkDID 기술을 사용하여 프라이버시를 보호하면서 신원 증명을 가능하게 합니다."
+  }
+}

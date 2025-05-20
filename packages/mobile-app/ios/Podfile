@@ -1,0 +1,100 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+# Force pods to match minimum iOS version for React Native
+# Fixes build issue on Xcode Cloud where some pods
+# Use iOS 12 calls despite being set to iOS 11
+def __apply_Xcode_14_3_RC_post_install_workaround(installer)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      current_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      minimum_target = min_ios_version_supported
+      if current_target.to_f < minimum_target.to_f
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = minimum_target
+      end
+    end
+  end
+end
+
+target 'CreLinkWallet' do
+  config = use_native_modules!
+
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # Hermes is now enabled by default. Disable by setting this flag to false.
+    :hermes_enabled => true,
+    :fabric_enabled => flags[:fabric_enabled],
+    # Enables Flipper.
+    # Note that if you use_frameworks!, flipper will not work.
+    # 배포 빌드에서는 비활성화
+    :flipper_configuration => FlipperConfiguration.disabled,
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # 암호화 및 보안 라이브러리
+  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
+  pod 'RNMMKV', :path => '../node_modules/react-native-mmkv'
+  pod 'RNSensitiveInfo', :path => '../node_modules/react-native-sensitive-info'
+  pod 'RNBiometrics', :path => '../node_modules/react-native-biometrics'
+
+  # UI 관련 라이브러리
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  pod 'RNSafeAreaContext', :path => '../node_modules/react-native-safe-area-context'
+
+  # 푸시 알림
+  pod 'RNPushNotification', :path => '../node_modules/react-native-push-notification'
+
+  # Firebase 통합
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  $RNFirebaseAsStaticFramework = true
+
+  post_install do |installer|
+    # Xcode 14.3 workaround
+    __apply_Xcode_14_3_RC_post_install_workaround(installer)
+    
+    # 기본 React Native 후처리
+    react_native_post_install(
+      installer,
+      # Set `mac_catalyst_enabled` to `true` in order to apply patches
+      # necessary for Mac Catalyst builds
+      :mac_catalyst_enabled => false
+    )
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    # Xcode 빌드 설정 최적화
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # 배포용 빌드 최적화
+        if config.name == 'Release'
+          config.build_settings['SWIFT_COMPILATION_MODE'] = 'wholemodule'
+          config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-O'
+          config.build_settings['GCC_OPTIMIZATION_LEVEL'] = 's'
+          config.build_settings['DEAD_CODE_STRIPPING'] = 'YES'
+        end
+        
+        # 아키텍처 설정
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+        
+        # React Native Maps 관련 설정
+        config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+        
+        # Privacy manifest 설정
+        if config.base_configuration_reference && !config.base_configuration_reference.real_path.to_s.include?("PrivacyInfo.xcprivacy")
+          config.build_settings['VALIDATE_PRIVACY_MANIFEST'] = "NO"
+        end
+      end
+    end
+  end
+end

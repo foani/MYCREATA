@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreLink React 통합 예제</title>
+  <meta name="description" content="CreLink 지갑 SDK의 React 통합 예제">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #111827;
+        color: #e5e7eb;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <!-- CreLink SDK를 로드하기 위한 스크립트 -->
+  <script>
+    // 개발 환경에서는 CreLink가 설치되어 있지 않을 수 있으므로 모킹
+    if (typeof window.crelink === 'undefined') {
+      console.warn('CreLink is not installed. Using mock implementation for development.');
+      
+      // 모의 CreLink 구현
+      window.crelink = {
+        request: async ({ method, params }) => {
+          console.log('CreLink request:', method, params);
+          
+          // 메서드별 모의 응답
+          switch (method) {
+            case 'eth_requestAccounts':
+              return ['0x742d35Cc6634C0532925a3b844Bc454e4438f44e'];
+            case 'eth_accounts':
+              return ['0x742d35Cc6634C0532925a3b844Bc454e4438f44e'];
+            case 'eth_chainId':
+              return '0x3E8'; // Catena Mainnet
+            case 'eth_getBalance':
+              return '0x1BC16D674EC80000'; // 2 ETH in hex
+            case 'eth_sendTransaction':
+              return '0x123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234';
+            case 'personal_sign':
+              return '0xabcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234';
+            case 'wallet_switchEthereumChain':
+              console.log('Switching chain to:', params[0].chainId);
+              const event = new CustomEvent('chainChanged', { detail: params[0].chainId });
+              window.dispatchEvent(event);
+              return null;
+            default:
+              throw new Error(`Unsupported method: ${method}`);
+          }
+        },
+        
+        // 이벤트 리스너 관리
+        _listeners: {},
+        
+        on: (eventName, callback) => {
+          if (!window.crelink._listeners[eventName]) {
+            window.crelink._listeners[eventName] = [];
+          }
+          window.crelink._listeners[eventName].push(callback);
+          
+          // chainChanged 이벤트 리스너 등록
+          if (eventName === 'chainChanged') {
+            window.addEventListener('chainChanged', (e) => {
+              callback(e.detail);
+            });
+          }
+        },
+        
+        removeListener: (eventName, callback) => {
+          if (window.crelink._listeners[eventName]) {
+            window.crelink._listeners[eventName] = window.crelink._listeners[eventName].filter(
+              (cb) => cb !== callback
+            );
+          }
+          
+          // chainChanged 이벤트 리스너 제거
+          if (eventName === 'chainChanged') {
+            window.removeEventListener('chainChanged', callback);
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>

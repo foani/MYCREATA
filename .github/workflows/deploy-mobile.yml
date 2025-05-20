@@ -1,0 +1,307 @@
+name: Deploy Mobile App
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '배포 환경 (production/beta)'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+          - production
+          - beta
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      version_code: ${{ steps.get_version.outputs.version_code }}
+      environment: ${{ steps.get_environment.outputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Get version from tag or package.json
+        id: get_version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION=$(node -p "require('./packages/mobile-app/package.json').version")
+          fi
+          VERSION_CODE=$(date +%Y%m%d%H)
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version_code=${VERSION_CODE}" >> $GITHUB_OUTPUT
+          echo "버전: ${VERSION}, 버전 코드: ${VERSION_CODE}"
+          
+      - name: Determine environment
+        id: get_environment
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+            ENV="production"
+          elif [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+            ENV="production"
+          else
+            ENV="beta"
+          fi
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "배포 환경: ${ENV}"
+
+  build-android:
+    needs: prepare
+    runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: ${{ needs.prepare.outputs.version }}
+      VERSION_CODE: ${{ needs.prepare.outputs.version_code }}
+      ENVIRONMENT: ${{ needs.prepare.outputs.environment }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: |
+          cd packages/mobile-app
+          yarn install --frozen-lockfile
+          
+      - name: Update version in build.gradle
+        run: |
+          cd packages/mobile-app/android/app
+          if [ -f "build.gradle" ]; then
+            sed -i "s/versionCode [0-9]*/versionCode ${{ env.VERSION_CODE }}/g" build.gradle
+            sed -i "s/versionName \"[0-9.]*\"/versionName \"${{ env.VERSION_NAME }}\"/g" build.gradle
+          fi
+          
+      - name: Set up Android keystore
+        run: |
+          cd packages/mobile-app/android
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app/crelink-wallet.keystore
+          echo "CRELINK_UPLOAD_STORE_FILE=crelink-wallet.keystore" >> gradle.properties
+          echo "CRELINK_UPLOAD_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> gradle.properties
+          echo "CRELINK_UPLOAD_STORE_PASSWORD=${{ secrets.ANDROID_STORE_PASSWORD }}" >> gradle.properties
+          echo "CRELINK_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> gradle.properties
+          
+      - name: Build Android release
+        run: |
+          cd packages/mobile-app
+          CI=true ./scripts/deploy-android.sh
+          
+      - name: Upload Android artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-release
+          path: |
+            build/android/*.aab
+            build/android/*.apk
+          retention-days: 14
+          
+      - name: Deploy to Google Play
+        if: env.ENVIRONMENT == 'production'
+        run: |
+          cd packages/mobile-app
+          gem install bundler
+          bundle install
+          
+          TRACK="beta"
+          if [ "${{ env.ENVIRONMENT }}" == "production" ]; then
+            TRACK="production"
+          fi
+          
+          echo "${{ secrets.GOOGLE_PLAY_JSON_KEY }}" > google-play-key.json
+          
+          bundle exec fastlane android deploy track:${TRACK}
+          
+          rm google-play-key.json
+
+  build-ios:
+    needs: prepare
+    runs-on: macos-latest
+    env:
+      VERSION_NAME: ${{ needs.prepare.outputs.version }}
+      VERSION_CODE: ${{ needs.prepare.outputs.version_code }}
+      ENVIRONMENT: ${{ needs.prepare.outputs.environment }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install dependencies
+        run: |
+          cd packages/mobile-app
+          yarn install --frozen-lockfile
+          
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+          
+      - name: Update Info.plist version
+        run: |
+          cd packages/mobile-app/ios/CreLinkWallet
+          plutil -replace CFBundleShortVersionString -string "${{ env.VERSION_NAME }}" Info.plist
+          plutil -replace CFBundleVersion -string "${{ env.VERSION_CODE }}" Info.plist
+          
+      - name: Install CocoaPods
+        run: |
+          cd packages/mobile-app/ios
+          pod install
+          
+      - name: Install fastlane
+        run: |
+          cd packages/mobile-app
+          gem install bundler
+          bundle install
+          
+      - name: Set up iOS certificates and profiles
+        run: |
+          cd packages/mobile-app
+          mkdir -p ios/certs
+          
+          # 인증서 및 프로비저닝 프로파일 복원
+          echo "${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}" | base64 --decode > ios/certs/distribution.p12
+          echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ios/certs/profile.mobileprovision
+          
+          # 키체인 설정
+          security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
+          
+          # 인증서 가져오기
+          security import ios/certs/distribution.p12 -k ~/Library/Keychains/build.keychain -P "${{ secrets.IOS_CERTIFICATE_PASSWORD }}" -A
+          
+          # 코드 서명 설정
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+          
+          # 프로비저닝 프로파일 설치
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp ios/certs/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+          
+      - name: Build iOS release
+        run: |
+          cd packages/mobile-app
+          CI=true ./scripts/deploy-ios.sh
+          
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-release
+          path: |
+            build/ios/*.ipa
+          retention-days: 14
+          
+      - name: Deploy to App Store
+        if: env.ENVIRONMENT == 'production'
+        run: |
+          cd packages/mobile-app
+          
+          # App Store Connect API 키 파일 생성
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}" > app-store-api-key.p8
+          
+          # Fastlane을 사용하여 앱 업로드
+          LANE="beta"
+          if [ "${{ env.ENVIRONMENT }}" == "production" ]; then
+            LANE="deploy"
+          fi
+          
+          APP_STORE_CONNECT_API_KEY_ID=${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
+          APP_STORE_CONNECT_ISSUER_ID=${{ secrets.APP_STORE_CONNECT_ISSUER_ID }} \
+          APP_STORE_CONNECT_API_KEY_CONTENT=$(cat app-store-api-key.p8) \
+          bundle exec fastlane ios ${LANE}
+          
+          # API 키 파일 삭제
+          rm app-store-api-key.p8
+
+  notify:
+    needs: [prepare, build-android, build-ios]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Check job results
+        id: check_results
+        run: |
+          if [ "${{ needs.build-android.result }}" == "success" ] && [ "${{ needs.build-ios.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "message=✅ 모바일 앱 배포 완료 (v${{ needs.prepare.outputs.version }})" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "message=❌ 모바일 앱 배포 실패 (v${{ needs.prepare.outputs.version }})" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "${{ steps.check_results.outputs.message }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.check_results.outputs.message }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*환경:*\n${{ needs.prepare.outputs.environment }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*버전:*\nv${{ needs.prepare.outputs.version }} (Build ${{ needs.prepare.outputs.version_code }})"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Android:*\n${{ needs.build-android.result }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*iOS:*\n${{ needs.build-ios.result }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Workflow 확인"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
